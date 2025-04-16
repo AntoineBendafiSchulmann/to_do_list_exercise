@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { toggleTodo, deleteTodo } from "../features/todos/listSlice";
 import { TodoItemProps } from "../types/TodoItemProps";
 import { FiTrash2 } from "react-icons/fi";
+import Button from "./Button";
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
   const dispatch = useDispatch();
@@ -21,9 +22,9 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
       <span style={{ textDecoration: todo.isDone ? "line-through" : "none" }}>
         {todo.title}
       </span>
-      <button onClick={handleDelete} style={{ color: "red" }}>
+      <Button onClick={handleDelete} style={{ color: "red" }}>
         <FiTrash2 />
-      </button>
+      </Button>
     </div>
   );
 };

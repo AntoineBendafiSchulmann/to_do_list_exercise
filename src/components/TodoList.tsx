@@ -5,6 +5,7 @@ import { markAllDone, deleteAllDone, changeFilter } from "../features/todos/list
 import { selectFilteredTodos } from "../features/todos/listSelectors";
 import { toggleTheme } from "../features/theme/themeSlice";
 import TodoItem from "./TodoItem";
+import Button from "./Button";
 import { Todo } from "../types/Todo";
 
 const TodoList: React.FC = () => {
@@ -49,14 +50,14 @@ const TodoList: React.FC = () => {
       <h2>Liste de tâches</h2>
 
       <div style={{ margin: "10px 0" }}>
-        <button onClick={() => handleChangeFilter("all")}>Toutes</button>
-        <button onClick={() => handleChangeFilter("done")}>Faites</button>
-        <button onClick={() => handleChangeFilter("not_done")}>Non faites</button>
+        <Button onClick={() => handleChangeFilter("all")}>Toutes</Button>
+        <Button onClick={() => handleChangeFilter("done")}>Faites</Button>
+        <Button onClick={() => handleChangeFilter("not_done")}>Non faites</Button>
       </div>
 
       <div style={{ margin: "10px 0" }}>
-        <button onClick={handleMarkAllDone}>Marquer toutes faites</button>
-        <button onClick={handleDeleteAllDone}>Supprimer toutes faites</button>
+        <Button onClick={handleMarkAllDone}>Marquer toutes faites</Button>
+        <Button onClick={handleDeleteAllDone}>Supprimer toutes faites</Button>
       </div>
 
       <div style={{ margin: "10px 0" }}>
@@ -65,7 +66,7 @@ const TodoList: React.FC = () => {
 
       <div style={{ margin: "10px 0" }}>
         <p>Thème actuel : {theme}</p>
-        <button onClick={handleToggleTheme}>Changer le thème</button>
+        <Button onClick={handleToggleTheme}>Changer le thème</Button>
       </div>
 
       <ul style={{ listStyle: "none", padding: 0 }}>

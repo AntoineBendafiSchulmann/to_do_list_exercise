@@ -2,6 +2,7 @@ import React, { FormEvent, useCallback, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addTodo } from "../features/todos/listSlice";
 import { Todo } from "../types/Todo";
+import Button from "./Button";
 
 const TodoForm: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const TodoForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit}>
       <input type="text" placeholder="Nouvelle tâche" ref={titleRef} />
-      <button type="submit">Ajouter</button>
+      <Button type="submit">Ajouter</Button>
     </form>
   );
 };
