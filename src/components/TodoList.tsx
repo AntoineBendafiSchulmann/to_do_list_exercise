@@ -1,59 +1,62 @@
-import React, { useContext, useMemo, useCallback } from "react";
+import React, { useMemo, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../app/store";
+import { markAllDone, deleteAllDone, changeFilter } from "../features/todos/listSlice";
+import { selectFilteredTodos } from "../features/todos/listSelectors";
+import { toggleTheme } from "../features/theme/themeSlice";
 import TodoItem from "./TodoItem";
-import { ThemeContext } from "../context/ThemeContext";
-import { TodoStateContext } from "../context/TodoStateContext";
-import { TodoDispatchContext } from "../context/TodoDispatchContext";
 import { Todo } from "../types/Todo";
 
 const TodoList: React.FC = () => {
-  const state = useContext(TodoStateContext);
-  const dispatch = useContext(TodoDispatchContext);
-
-  const { theme, toggleTheme } = useContext(ThemeContext);
-  console.log("Thème actuel:", theme);
-
-  const filteredTodos = useMemo(() => {
-    switch (state.filter) {
-      case "done":
-        return state.todos.filter((t: Todo) => t.isDone);
-      case "not_done":
-        return state.todos.filter((t: Todo) => !t.isDone);
-      default:
-        return state.todos;
-    }
-  }, [state.filter, state.todos]);
+  const dispatch = useDispatch();
+  const todos = useSelector(selectFilteredTodos);
+  const isLoading = useSelector((state: RootState) => state.list.isLoading);
+  const error = useSelector((state: RootState) => state.list.error);
+  const theme = useSelector((state: RootState) => state.theme.theme);
 
   const remainingCount = useMemo(() => {
-    return state.todos.filter((t: Todo) => !t.isDone).length;
-  }, [state.todos]);
+    return todos.filter((t: Todo) => !t.isDone).length;
+  }, [todos]);
 
-  const markAllDone = useCallback(() => {
-    dispatch({ type: "MARK_ALL_DONE" });
+  const handleMarkAllDone = useCallback(() => {
+    dispatch(markAllDone());
   }, [dispatch]);
 
-  const deleteAllDone = useCallback(() => {
-    dispatch({ type: "DELETE_ALL_DONE" });
+  const handleDeleteAllDone = useCallback(() => {
+    dispatch(deleteAllDone());
   }, [dispatch]);
 
-  const changeFilter = useCallback((filter: "all" | "done" | "not_done") => {
-    dispatch({ type: "CHANGE_FILTER", payload: filter });
+  const handleChangeFilter = useCallback(
+    (f: "all" | "done" | "not_done") => {
+      dispatch(changeFilter(f));
+    },
+    [dispatch]
+  );
+
+  const handleToggleTheme = useCallback(() => {
+    dispatch(toggleTheme());
   }, [dispatch]);
 
-  console.log("Nombre de tâches restantes:", remainingCount);
+  if (isLoading) {
+    return <div>Chargement en cours...</div>;
+  }
+  if (error) {
+    return <div>Erreur: {error}</div>;
+  }
 
   return (
     <div>
       <h2>Liste de tâches</h2>
 
       <div style={{ margin: "10px 0" }}>
-        <button onClick={() => changeFilter("all")}>Toutes</button>
-        <button onClick={() => changeFilter("done")}>Faites</button>
-        <button onClick={() => changeFilter("not_done")}>Non faites</button>
+        <button onClick={() => handleChangeFilter("all")}>Toutes</button>
+        <button onClick={() => handleChangeFilter("done")}>Faites</button>
+        <button onClick={() => handleChangeFilter("not_done")}>Non faites</button>
       </div>
 
       <div style={{ margin: "10px 0" }}>
-        <button onClick={markAllDone}>Marquer toutes faites</button>
-        <button onClick={deleteAllDone}>Supprimer toutes faites</button>
+        <button onClick={handleMarkAllDone}>Marquer toutes faites</button>
+        <button onClick={handleDeleteAllDone}>Supprimer toutes faites</button>
       </div>
 
       <div style={{ margin: "10px 0" }}>
@@ -62,11 +65,11 @@ const TodoList: React.FC = () => {
 
       <div style={{ margin: "10px 0" }}>
         <p>Thème actuel : {theme}</p>
-        <button onClick={toggleTheme}>Changer le thème</button>
+        <button onClick={handleToggleTheme}>Changer le thème</button>
       </div>
 
       <ul style={{ listStyle: "none", padding: 0 }}>
-        {filteredTodos.map((todo: Todo) => (
+        {todos.map((todo: Todo) => (
           <li key={todo.id}>
             <TodoItem todo={todo} />
           </li>

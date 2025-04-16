@@ -1,9 +1,10 @@
-import React, { useRef, FormEvent, useCallback, useContext } from "react";
-import { TodoDispatchContext } from "../context/TodoDispatchContext";
+import React, { FormEvent, useCallback, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../features/todos/listSlice";
 import { Todo } from "../types/Todo";
 
 const TodoForm: React.FC = () => {
-  const dispatch = useContext(TodoDispatchContext);
+  const dispatch = useDispatch();
   const titleRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = useCallback((e: FormEvent) => {
@@ -13,19 +14,12 @@ const TodoForm: React.FC = () => {
       console.log("Titre vide, on ne fait rien");
       return;
     }
-
-    const newId = Date.now().toString();
-
     const newTodo: Todo = {
-      id: newId, 
+      id: Date.now().toString(),
       title: titleValue,
       isDone: false,
     };
-
-    console.log("Ajout d'une nouvelle tâche :", newTodo);
-
-    dispatch({ type: "ADD_TODO", payload: newTodo });
-
+    dispatch(addTodo(newTodo));
     if (titleRef.current) {
       titleRef.current.value = "";
     }
