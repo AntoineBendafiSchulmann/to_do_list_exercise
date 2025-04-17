@@ -1,34 +1,37 @@
-import React, { FormEvent, useCallback, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { addTodo } from "../features/todos/listSlice";
-import { Todo } from "../types/Todo";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { useAddTodoMutation } from "../features/todos/mutations/useAddTodoMutation";
 import Button from "./Button";
 
-const TodoForm: React.FC = () => {
-  const dispatch = useDispatch();
-  const titleRef = useRef<HTMLInputElement>(null);
+type FormValues = {
+  title: string;
+};
 
-  const handleSubmit = useCallback((e: FormEvent) => {
-    e.preventDefault();
-    const titleValue = titleRef.current?.value.trim();
-    if (!titleValue) {
-      console.log("Titre vide, on ne fait rien");
-      return;
-    }
-    const newTodo: Todo = {
-      id: Date.now().toString(),
-      title: titleValue,
-      isDone: false,
-    };
-    dispatch(addTodo(newTodo));
-    if (titleRef.current) {
-      titleRef.current.value = "";
-    }
-  }, [dispatch]);
+const TodoForm: React.FC = () => {
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
+    mode: "onTouched"
+  });
+  const { mutate } = useAddTodoMutation();
+
+  const onSubmit = (data: FormValues) => {
+    const title = data.title.trim();
+    if (!title) return;
+    mutate({ title });
+    reset();
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input type="text" placeholder="Nouvelle tâche" ref={titleRef} />
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex items-center gap-4 mb-6"
+    >
+      <input
+        type="text"
+        placeholder="Nouvelle tâche"
+        {...register("title", { required: "Le titre est requis" })}
+        className={`flex-1 border px-4 py-2 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.title ? 'border-red-500 focus:ring-red-500' : 'border-gray-300'}`}
+      />
+      {errors.title && <span className="text-red-500">{errors.title.message}</span>}
       <Button type="submit">Ajouter</Button>
     </form>
   );

@@ -1,19 +1,12 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "./app/store";
-import { fetchList } from "./features/todos/listSlice";
+import { useSelector } from "react-redux";
+import type { RootState } from "./app/store";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
-import './App.css';
-
+import "./App.css";
 
 function App() {
-  const dispatch = useDispatch<AppDispatch>();
   const theme = useSelector((state: RootState) => state.theme.theme);
-
-  useEffect(() => {
-    dispatch(fetchList());
-  }, [dispatch]);
 
   useEffect(() => {
     document.body.classList.remove("light", "dark");
@@ -22,7 +15,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Ma Todo List</h1>
+      <h1 className="text-red-50">Ma Todo List</h1>
       <TodoForm />
       <TodoList />
     </div>

@@ -1,54 +1,36 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Sujet: 
+https://apollo.lereacteur.io/course/679a3b8a8373d20015573f18/67e17bb3d1f7d70015d35832
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## mémoisation
 
-## Expanding the ESLint configuration
+```React.memo()``` Empêche le re-render d’un composant si ses props n’ont pas changé
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```useMemo()``` Ne recalcule une valeur que si ses dépendances changent
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+```useCallback()``` Ne recrée pas une fonction si ses dépendances ne changent pas
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## React Hook Form 
+gestion des formulaires
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Redux toolkit :
+Pour centraliser les états côté client, comme :
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- le thème (light / dark)
+- le filtre de tâches (all, done, not_done)
+
+```Redux Toolkit``` = gère et centralise l'état local des composants concernés coté client
+
+##  Tanstack Query :  
+Utilisé pour gérer les données côté serveur (fetch et cache)
+
+- ```GET /todos``` → récupère toutes les tâches
+
+mutations : 
+- ```POST /todos``` → crée une nouvelle tâche (title)
+- ```PUT /todos/:id``` → inverse l’état fait / non fait
+- ```DELETE /todos/:id``` → supprime une tâche
+
+TanStack Query = récupère et met à jour les données coté serveur

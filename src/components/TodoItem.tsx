@@ -1,30 +1,42 @@
 import React from "react";
-import { useDispatch } from "react-redux";
-import { toggleTodo, deleteTodo } from "../features/todos/listSlice";
+import { useToggleStateTodoMutation } from "../features/todos/mutations/useToggleStateTodoMutation";
+import { useDeleteTodoMutation } from "../features/todos/mutations/useDeleteTodoMutation";
 import { TodoItemProps } from "../types/TodoItemProps";
 import { FiTrash2 } from "react-icons/fi";
-import Button from "./Button";
+import ButtonDelete from "./ButtonDelete";
 
 const TodoItem: React.FC<TodoItemProps> = ({ todo }) => {
-  const dispatch = useDispatch();
+  const { mutate: toggle } = useToggleStateTodoMutation();
+  const { mutate: deleteTodo } = useDeleteTodoMutation();
 
   const handleToggle = () => {
-    dispatch(toggleTodo(todo.id));
+    toggle(todo.id);
   };
 
   const handleDelete = () => {
-    dispatch(deleteTodo(todo.id));
+    deleteTodo(todo.id);
   };
 
   return (
-    <div style={{ margin: "5px 0" }}>
-      <input type="checkbox" checked={todo.isDone} onChange={handleToggle} />
-      <span style={{ textDecoration: todo.isDone ? "line-through" : "none" }}>
-        {todo.title}
-      </span>
-      <Button onClick={handleDelete} style={{ color: "red" }}>
+    <div className="flex items-center justify-between border-b py-2">
+      <label className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={todo.isDone}
+          onChange={handleToggle}
+          className="accent-blue-600 w-4 h-4"
+        />
+        <span
+          className={`${
+            todo.isDone ? "line-through text-gray-400" : ""
+          }`}
+        >
+          {todo.title}
+        </span>
+      </label>
+      <ButtonDelete onClick={handleDelete}>
         <FiTrash2 />
-      </Button>
+      </ButtonDelete>
     </div>
   );
 };
